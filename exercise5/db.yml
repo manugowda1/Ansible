@@ -1,0 +1,43 @@
+---
+- name: Setup DBserver
+  hosts: dbgrp
+  become: yes
+  vars:
+    dbname: accounts
+    dbuser: admin
+    dbpass: admin123
+  tasks:
+
+    - debug: 
+        var: dbname
+
+    - debug:
+        msg: "Value of dbuser is {{dbname}}"
+
+    - name: Install MYSQL server
+      yum:
+        name: mariadb-server
+        state: present
+
+    - name: Install Python MySQL
+      yum:
+        name: MySQL-python
+        state: present
+
+    - name: Start & Enable mariadb service
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Create a new database with name 'accounts'
+      mysql_db:
+        name: "{{dbname}}"
+        state: present
+
+    - name: Create database user with name 'admin'
+      mysql_user:
+        name: "{{dbuser}}"
+        password: "{{dbpass}}"
+        priv: '*.*:ALL'
+        state: present

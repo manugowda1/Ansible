@@ -1,0 +1,20 @@
+web1 ansible_host=172.31.21.61
+web2 ansible_host=172.31.25.225
+web3 ansible_host=172.31.31.87 ansible_user=ubuntu
+db ansible_host=172.31.18.141
+
+[webgrp]
+web1
+web2
+web3
+
+[dbgrp]
+db
+
+[dc_ohio:children]
+webgrp
+dbgrp
+
+[dc_ohio:vars]
+ansible_user=centos
+ansible_ssh_private_key_file=web.pem
